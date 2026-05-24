@@ -63,10 +63,10 @@ const BOOSTERS_DEF = [
 // STATE
 // ============================================================
 let G = {
-  coins:0, energy:5, streak:1, musicOn:true, soundOn:true,
+  coins:150, energy:99, streak:1, musicOn:true, soundOn:true,
   playerName:'Wellness Star', playerLevel:1,
   levelsData: LEVELS.map(()=>({stars:0,best:0})),
-  unlockedLevel:1,
+  unlockedLevel:15,
   habits: JSON.parse(JSON.stringify(HABITS)),
   boosters:{ aloe:3, tea:2, shake:3, protein:2 },
   dailyClaimed:false, dailyDate:'',
@@ -336,7 +336,7 @@ function renderLevelMap() {
   const path=el('level-path'); path.innerHTML='';
   LEVELS.forEach((lvl,i)=>{
     const ld=G.levelsData[i]||{stars:0,best:0};
-    const unlocked=i<G.unlockedLevel;
+    const unlocked=true; // all levels open
     const completed=ld.stars>0;
     const current=i===G.unlockedLevel-1&&!completed;
     const row=document.createElement('div');
@@ -361,12 +361,13 @@ function renderLevelMap() {
 // ============================================================
 function startLevel(idx) {
   const lvl=LEVELS[idx]; if(!lvl) return;
-  if(G.energy<=0){toast('⚡ Sin energía. ¡Espera o recarga!');return;}
+  // energy always available
   G.currentLevel=idx; G.score=0; G.moves=lvl.moves;
   G.combo=0; G.selected=null; G.animating=false; G.activeBooster=null;
   G.objectives=lvl.target.map(t=>({...t,collected:0}));
   G.progress={}; lvl.target.forEach(t=>G.progress[t.id]=0);
-  G.energy=Math.max(0,G.energy-1); save();
+  // energy no longer consumed
+save();
   showScreen('gameplay');
   el('g-level').textContent=lvl.num;
   refreshGameUI();

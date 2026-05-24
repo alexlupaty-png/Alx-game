@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0D1A0F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ALX Wellness">
+<title>ALX Wellness — Nutrición · Energía · Bienestar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ALX WELLNESS — Design System
+   ============================================================ */
+:root {
+  --sage:        #7A9B76;
+  --sage-light:  #A8C4A4;
+  --sage-pale:   #D4E8D1;
+  --forest:      #1A3320;
+  --forest-mid:  #2A4A30;
+  --forest-deep: #0D1A0F;
+  --gold:        #C9A84C;
+  --gold-light:  #E8C97A;
+  --gold-pale:   #F5E8C0;
+  --cream:       #F7F3EC;
+  --cream-dark:  #EDE6D8;
+  --white-warm:  #FDFBF7;
+  --mocha:       #6B5744;
+  --text-primary: #1A2E1C;
+  --text-mid:    #4A6A4C;
+  --text-soft:   #7A9A7C;
+  --glass-white: rgba(255,255,255,0.07);
+  --glass-border: rgba(255,255,255,0.1);
+  --glass-green: rgba(122,155,118,0.12);
+  --shadow-soft: 0 4px 24px rgba(0,0,0,0.15);
+  --shadow-glow: 0 0 40px rgba(122,155,118,0.2);
+  --r-sm: 16px;
+  --r-md: 24px;
+  --r-lg: 36px;
+  --r-xl: 48px;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Outfit', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  font-family: var(--font-body);
+  background: var(--forest-deep);
+  color: var(--cream);
+  user-select: none; -webkit-user-select: none;
+}
+
+/* ============================================================
+   AMBIENT BACKGROUND SYSTEM
+   ============================================================ */
+.ambient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.amb-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(60px); opacity: 0.25;
+  animation: orbDrift 12s ease-in-out infinite alternate;
+}
+.amb-orb.o1 { width: 300px; height: 300px; top: -80px; left: -60px; background: radial-gradient(circle, var(--sage) 0%, transparent 70%); animation-delay: 0s; }
+.amb-orb.o2 { width: 250px; height: 250px; bottom: 100px; right: -60px; background: radial-gradient(circle, var(--forest-mid) 0%, transparent 70%); opacity: 0.3; animation-delay: -4s; }
+.amb-orb.o3 { width: 200px; height: 200px; top: 40%; left: 30%; background: radial-gradient(circle, var(--gold) 0%, transparent 70%); opacity: 0.1; animation-delay: -8s; }
+@keyframes orbDrift {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(30px,20px) scale(1.15); }
+}
+.leaf-bg { position: absolute; inset: 0; pointer-events: none; }
+.leaf-float {
+  position: absolute; opacity: 0.06;
+  animation: leafDrift linear infinite;
+  font-size: 24px;
+}
+@keyframes leafDrift {
+  0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  5%   { opacity: 0.06; }
+  95%  { opacity: 0.04; }
+  100% { transform: translateY(-100px) rotate(180deg); opacity: 0; }
+}
+.noise {
+  position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+.screen {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+  transform: translateY(24px);
+  overflow: hidden;
+}
+.screen.active {
+  opacity: 1; pointer-events: all; transform: translateY(0);
+}
+.screen.exit {
+  opacity: 0; transform: translateY(-24px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ============================================================
+   ALX INTRO CINEMATIC
+   ============================================================ */
+#intro {
+  background: #060E07;
+  align-items: center; justify-content: center; z-index: 200;
+}
+.intro-canvas { position: absolute; inset: 0; z-index: 1; }
+.intro-sweep {
+  position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(110deg, transparent 30%, rgba(201,168,76,0.06) 50%, transparent 70%);
+  animation: introSweep 3s ease-in-out infinite;
+}
+@keyframes introSweep { 0%,100%{transform:translateX(-100%);} 50%{transform:translateX(100%);} }
+.intro-content {
+  position: relative; z-index: 3;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  opacity: 0; animation: introIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+}
+@keyframes introIn {
+  from { opacity:0; transform: scale(0.88) translateY(20px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+.intro-eyebrow {
+  font-family: var(--font-body); font-size: 10px; font-weight: 300;
+  color: rgba(201,168,76,0.6); letter-spacing: 5px; text-transform: uppercase;
+  margin-bottom: 28px;
+  opacity: 0; animation: fadeUp 0.6s ease 1s forwards;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:none;} }
+.alx-logo-mark {
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 0;
+}
+.alx-svg-main {
+  width: min(260px, 70vw); height: auto;
+}
+.alx-path { stroke-dasharray: 600; stroke-dashoffset: 600; }
+.alx-path-A  { animation: draw 1s cubic-bezier(0.16,1,0.3,1) 0.4s forwards; }
+.alx-path-Ab { animation: draw 0.5s cubic-bezier(0.16,1,0.3,1) 1s forwards; }
+.alx-path-L  { animation: draw 0.9s cubic-bezier(0.16,1,0.3,1) 0.65s forwards; }
+.alx-path-X  { animation: draw 1s cubic-bezier(0.16,1,0.3,1) 1s forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.intro-divider {
+  display: flex; align-items: center; gap: 12px;
+  width: min(220px,60vw); margin: 22px 0 18px;
+  opacity: 0; animation: fadeUp 0.5s ease 1.6s forwards;
+}
+.intro-divider-line { flex:1; height:1px; background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent); }
+.intro-divider-gem { font-size:7px; color: var(--gold); animation: gemSpin 8s linear infinite; }
+@keyframes gemSpin { to { transform: rotate(360deg); } }
+.intro-brand {
+  font-family: var(--font-display); font-size: 13px; font-weight: 400;
+  color: rgba(212,232,209,0.7); letter-spacing: 4px; text-transform: uppercase;
+  opacity: 0; animation: fadeUp 0.5s ease 1.8s forwards;
+}
+.intro-tag {
+  font-family: var(--font-body); font-size: 10px; font-weight: 300;
+  color: rgba(201,168,76,0.5); letter-spacing: 2px; margin-top: 8px;
+  opacity: 0; animation: fadeUp 0.5s ease 2s forwards;
+}
+.intro-skip {
+  position: absolute; bottom: 50px; left:50%; transform: translateX(-50%);
+  font-size: 10px; color: rgba(255,255,255,0.25); letter-spacing: 2px;
+  cursor: pointer; opacity: 0; animation: fadeUp 0.5s ease 2.3s forwards;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   MASCOT SVGs
+   ============================================================ */
+.mascot { display: inline-block; }
+.mascot.bounce { animation: mascotBounce 2s ease-in-out infinite; }
+@keyframes mascotBounce { 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-8px) rotate(3deg);} }
+.mascot.float { animation: mascotFloat 3s ease-in-out infinite; }
+@keyframes mascotFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+.mascot.celebrate { animation: mascotCelebrate 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes mascotCelebrate { from{transform:scale(0.5) rotate(-20deg);} to{transform:scale(1) rotate(0);} }
+
+/* ============================================================
+   MAIN MENU
+   ============================================================ */
+#menu {
+  background: linear-gradient(175deg, var(--forest-deep) 0%, #0F2012 50%, #0A1A0C 100%);
+}
+.menu-scroll {
+  flex:1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 0 0 20px;
+  scrollbar-width: none;
+}
+.menu-scroll::-webkit-scrollbar { display: none; }
+
+/* Top bar */
+.menu-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: max(48px, env(safe-area-inset-top, 48px)) 20px 16px;
+  position: relative; z-index: 5;
+}
+.player-row { display: flex; align-items: center; gap: 10px; }
+.player-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--forest-mid), var(--sage));
+  border: 2px solid rgba(201,168,76,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; position: relative;
+}
+.player-avatar::after {
+  content: ''; position: absolute; inset: -3px; border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.2);
+}
+.player-meta { display: flex; flex-direction: column; }
+.player-name-text { font-size: 13px; font-weight: 600; color: var(--cream); }
+.player-rank { font-size: 10px; font-weight: 300; color: var(--gold); letter-spacing: 1px; }
+.topbar-chips { display: flex; gap: 8px; }
+.chip {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px); border-radius: 20px;
+  padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--cream);
+}
+.chip.gold { border-color: rgba(201,168,76,0.35); }
+.chip-icon { font-size: 14px; }
+
+/* ALX Brand in menu */
+.menu-brand-section {
+  position: relative; z-index: 3;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 8px 20px 20px;
+}
+.menu-alx-logo {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.menu-alx-svg { width: 90px; height: auto; filter: drop-shadow(0 0 12px rgba(201,168,76,0.2)); }
+.menu-alx-sub {
+  font-family: var(--font-body); font-size: 9px; font-weight: 300;
+  color: rgba(201,168,76,0.55); letter-spacing: 3px; text-transform: uppercase;
+}
+.menu-wellness-title {
+  font-family: var(--font-display); font-size: 32px; font-weight: 600;
+  color: var(--cream); text-align: center; line-height: 1.1; margin-top: 12px;
+  text-shadow: 0 2px 20px rgba(122,155,118,0.3);
+}
+.menu-wellness-tag {
+  font-size: 11px; font-weight: 300; color: var(--sage-light); letter-spacing: 2px;
+  margin-top: 4px; text-align: center;
+}
+
+/* Mascot area */
+.mascot-area {
+  display: flex; align-items: flex-end; justify-content: center; gap: 16px;
+  padding: 16px 20px 0; position: relative; z-index: 3;
+}
+.mascot-card {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px); border-radius: var(--r-lg);
+  padding: 14px 16px 10px; position: relative; overflow: hidden;
+  flex: 1; max-width: 160px;
+}
+.mascot-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at top, rgba(122,155,118,0.08), transparent 70%);
+  pointer-events: none;
+}
+.mascot-card.energy { border-color: rgba(122,155,118,0.3); }
+.mascot-card.calm   { border-color: rgba(201,168,76,0.25); }
+.mascot-name { font-size: 11px; font-weight: 600; color: var(--cream); letter-spacing: 0.5px; }
+.mascot-tip { font-size: 9px; font-weight: 300; color: rgba(212,232,209,0.6); text-align: center; line-height: 1.4; }
+.mascot-aura {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 80%; height: 20px;
+  background: radial-gradient(ellipse, rgba(122,155,118,0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.mascot-aura.gold { background: radial-gradient(ellipse, rgba(201,168,76,0.2) 0%, transparent 70%); }
+
+/* Daily reward */
+.daily-banner {
+  margin: 14px 20px 0; position: relative; z-index: 3;
+  background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
+  border: 1px solid rgba(201,168,76,0.3); border-radius: var(--r-md);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+  animation: dailyPulse 3s ease-in-out infinite;
+}
+@keyframes dailyPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.15); }
+  50%      { box-shadow: 0 0 0 8px rgba(201,168,76,0); }
+}
+.daily-icon { font-size: 24px; }
+.daily-text { flex:1; }
+.daily-text-title { font-size: 12px; font-weight: 600; color: var(--gold-light); }
+.daily-text-sub   { font-size: 10px; font-weight: 300; color: rgba(201,168,76,0.6); }
+.daily-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none; border-radius: 20px; padding: 7px 16px;
+  font-family: var(--font-body); font-size: 11px; font-weight: 700;
+  color: var(--forest); cursor: pointer; letter-spacing: 0.5px;
+  transition: transform 0.15s; box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+}
+.daily-btn:active { transform: scale(0.94); }
+
+/* PLAY BUTTON */
+.play-section { padding: 18px 20px 0; position: relative; z-index: 3; }
+.btn-play-main {
+  width: 100%; padding: 22px;
+  background: linear-gradient(135deg, var(--forest-mid) 0%, #3A6A40 50%, var(--forest-mid) 100%);
+  border: 1px solid rgba(122,155,118,0.4); border-radius: var(--r-lg);
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  cursor: pointer; position: relative; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(26,51,32,0.6), 0 0 0 1px rgba(122,155,118,0.1),
+              inset 0 1px 0 rgba(255,255,255,0.08);
+  transition: transform 0.15s, box-shadow 0.15s;
+  animation: playBreathe 3s ease-in-out infinite;
+}
+@keyframes playBreathe {
+  0%,100% { box-shadow: 0 8px 32px rgba(26,51,32,0.6), 0 0 20px rgba(122,155,118,0.1); }
+  50%      { box-shadow: 0 8px 48px rgba(26,51,32,0.8), 0 0 40px rgba(122,155,118,0.25); }
+}
+.btn-play-main::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.05) 50%, transparent 80%);
+  animation: playSweep 4s ease-in-out infinite;
+}
+@keyframes playSweep { 0%,100%{transform:translateX(-100%);} 50%{transform:translateX(100%);} }
+.btn-play-main:active { transform: scale(0.97); }
+.play-orb {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(122,155,118,0.2); border: 1px solid rgba(122,155,118,0.4);
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+  animation: playOrbPulse 2s ease-in-out infinite alternate;
+}
+@keyframes playOrbPulse {
+  from { box-shadow: 0 0 10px rgba(122,155,118,0.3); }
+  to   { box-shadow: 0 0 24px rgba(122,155,118,0.6); }
+}
+.play-text-wrap { display: flex; flex-direction: column; }
+.play-main-label {
+  font-family: var(--font-display); font-size: 26px; font-weight: 700;
+  color: var(--cream); letter-spacing: 2px; line-height: 1;
+}
+.play-sub-label {
+  font-size: 10px; font-weight: 300; color: var(--sage-light); letter-spacing: 1px;
+}
+.play-particles {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.pp { position: absolute; border-radius: 50%; animation: ppFloat linear infinite; }
+@keyframes ppFloat {
+  from { transform: translateY(100%) scale(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  to   { transform: translateY(-20px) scale(1); opacity: 0; }
+}
+
+/* Quick actions */
+.quick-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; padding: 14px 20px 0; position: relative; z-index: 3;
+}
+.quick-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px); border-radius: var(--r-md);
+  padding: 14px 8px; cursor: pointer;
+  transition: transform 0.15s, background 0.2s;
+  position: relative; overflow: hidden;
+}
+.quick-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at top, rgba(122,155,118,0.06), transparent);
+  pointer-events: none;
+}
+.quick-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.1); }
+.quick-icon { font-size: 22px; }
+.quick-label { font-size: 10px; font-weight: 500; color: rgba(212,232,209,0.75); letter-spacing: 0.5px; }
+.quick-badge {
+  position: absolute; top: 6px; right: 6px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--forest); font-size: 8px; font-weight: 700;
+  border-radius: 8px; padding: 2px 6px;
+}
+
+/* Habits row */
+.habits-section { padding: 16px 20px 0; position: relative; z-index: 3; }
+.section-label {
+  font-size: 10px; font-weight: 600; color: var(--sage); letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: rgba(122,155,118,0.2); }
+.habits-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.habits-row::-webkit-scrollbar { display: none; }
+.habit-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  min-width: 72px; padding: 12px 8px;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px); border-radius: var(--r-md);
+  cursor: pointer; transition: transform 0.15s;
+  flex-shrink: 0;
+}
+.habit-chip.done { background: rgba(122,155,118,0.15); border-color: rgba(122,155,118,0.4); }
+.habit-chip:active { transform: scale(0.92); }
+.habit-icon { font-size: 20px; }
+.habit-text { font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.6); text-align: center; line-height: 1.3; }
+.habit-check { font-size: 10px; color: var(--sage); }
+
+/* Settings row */
+.settings-strip {
+  display: flex; justify-content: center; gap: 12px;
+  padding: 14px 20px; position: relative; z-index: 3;
+}
+.icon-pill {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  font-size: 16px; cursor: pointer; transition: transform 0.15s, background 0.2s;
+}
+.icon-pill:active { transform: scale(0.88); background: rgba(255,255,255,0.12); }
+.icon-pill.muted { opacity: 0.4; }
+
+/* ============================================================
+   LEVEL MAP SCREEN
+   ============================================================ */
+#levelmap {
+  background: linear-gradient(175deg, #0D1A0F 0%, #0F2012 60%, #0A1A0C 100%);
+}
+.map-header {
+  padding: max(48px,env(safe-area-inset-top,48px)) 20px 12px;
+  display: flex; align-items: center; gap: 12px;
+  position: relative; z-index: 5;
+}
+.back-pill {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--cream); cursor: pointer;
+  transition: transform 0.15s;
+}
+.back-pill:active { transform: scale(0.88); }
+.map-title-wrap { flex:1; }
+.map-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--cream); }
+.map-sub { font-size: 10px; font-weight: 300; color: var(--sage-light); letter-spacing: 1px; }
+.map-coins { font-size: 12px; font-weight: 600; color: var(--gold); }
+
+.world-tabs {
+  display: flex; gap: 8px; padding: 0 20px 12px; overflow-x: auto;
+  scrollbar-width: none; position: relative; z-index: 5;
+}
+.world-tabs::-webkit-scrollbar { display: none; }
+.world-tab {
+  flex-shrink: 0; padding: 7px 16px;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  border-radius: 20px; font-size: 11px; font-weight: 500;
+  color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.2s;
+  white-space: nowrap;
+}
+.world-tab.active {
+  background: rgba(122,155,118,0.2); border-color: rgba(122,155,118,0.5);
+  color: var(--cream); font-weight: 600;
+}
+
+.level-path {
+  flex:1; overflow-y: auto; padding: 8px 20px 24px;
+  position: relative; z-index: 3; -webkit-overflow-scrolling: touch;
+}
+.level-path::before {
+  content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+  width: 2px; background: linear-gradient(180deg, rgba(122,155,118,0.3), rgba(201,168,76,0.1), rgba(122,155,118,0.3));
+  transform: translateX(-50%); pointer-events: none;
+}
+.path-row {
+  display: flex; justify-content: center; margin-bottom: 8px;
+  position: relative;
+}
+.path-row:nth-child(even) { justify-content: flex-end; padding-right: 20%; }
+.path-row:nth-child(odd)  { justify-content: flex-start; padding-left: 20%; }
+
+.level-node {
+  width: 80px; height: 80px; border-radius: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  cursor: pointer; position: relative; transition: transform 0.2s;
+  background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.08);
+}
+.level-node.unlocked {
+  background: linear-gradient(135deg, rgba(42,74,48,0.8), rgba(26,51,32,0.9));
+  border-color: rgba(122,155,118,0.5);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 12px rgba(122,155,118,0.1);
+}
+.level-node.completed {
+  background: linear-gradient(135deg, rgba(42,74,48,0.6), rgba(122,155,118,0.2));
+  border-color: rgba(122,155,118,0.7);
+}
+.level-node.current {
+  animation: nodePulse 2s ease-in-out infinite;
+  border-color: rgba(201,168,76,0.7) !important;
+  box-shadow: 0 0 0 0 rgba(201,168,76,0.3), 0 4px 24px rgba(0,0,0,0.4) !important;
+}
+@keyframes nodePulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.3), 0 4px 24px rgba(0,0,0,0.4); }
+  50%      { box-shadow: 0 0 0 10px rgba(201,168,76,0), 0 4px 24px rgba(0,0,0,0.4); }
+}
+.level-node.locked { opacity: 0.35; cursor: not-allowed; }
+.level-node:active:not(.locked) { transform: scale(0.91); }
+.node-num { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--cream); line-height: 1; }
+.node-stars { font-size: 9px; letter-spacing: 1px; }
+.node-icon { font-size: 11px; }
+.node-crown {
+  position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+  font-size: 14px; animation: crownBob 2s ease-in-out infinite;
+}
+@keyframes crownBob { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(-3px);} }
+
+/* ============================================================
+   GAMEPLAY SCREEN
+   ============================================================ */
+#gameplay {
+  background: linear-gradient(180deg, #0B1A0D 0%, #081509 100%);
+}
+.game-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: max(44px,env(safe-area-inset-top,44px)) 16px 8px;
+  position: relative; z-index: 5;
+}
+.game-level-info { display: flex; flex-direction: column; align-items: center; }
+.game-level-badge {
+  font-size: 10px; font-weight: 500; color: var(--sage-light); letter-spacing: 2px;
+}
+.game-score {
+  font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--cream);
+  transition: transform 0.2s;
+}
+.game-score.pop { animation: scorePop 0.3s ease; }
+@keyframes scorePop { 50% { transform: scale(1.25); color: var(--gold); } }
+.game-moves-wrap {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm); padding: 8px 14px;
+}
+.moves-label { font-size: 8px; font-weight: 500; color: var(--sage); letter-spacing: 1px; }
+.moves-val { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--cream); line-height: 1; }
+
+/* ALX mini HUD */
+.alx-hud {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.alx-hud-svg { width: 32px; height: auto; }
+
+/* Objective */
+.obj-strip {
+  display: flex; align-items: center; gap: 8px; padding: 6px 16px;
+  background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.obj-label { font-size: 8px; font-weight: 600; color: rgba(255,255,255,0.25); letter-spacing: 2px; min-width: 48px; }
+.obj-items { display: flex; gap: 6px; flex-wrap: wrap; }
+.obj-item {
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,0.07); border-radius: 20px;
+  padding: 4px 10px; font-size: 11px; font-weight: 600; color: var(--cream);
+}
+.obj-item.done { background: rgba(122,155,118,0.2); color: var(--sage-light); }
+
+/* Progress stars */
+.stars-strip { display: flex; align-items: center; gap: 4px; padding: 6px 20px; }
+.s-star { font-size: 14px; transition: transform 0.3s; }
+.s-star.lit { animation: starLit 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes starLit { from{transform:scale(0)rotate(-30deg);} to{transform:scale(1);} }
+.s-track { flex:1; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+.s-fill { height: 100%; background: linear-gradient(90deg, var(--sage), var(--gold)); border-radius: 3px; width:0; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* BOARD */
+.board-wrap {
+  flex:1; display: flex; align-items: center; justify-content: center;
+  padding: 4px 10px; position: relative;
+}
+.board-inner { position: relative; }
+.game-board {
+  display: grid;
+  background: rgba(0,0,0,0.25);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 0 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+  overflow: hidden; position: relative;
+}
+.board-shake { animation: shake 0.45s ease; }
+@keyframes shake {
+  0%,100%{transform:none;}
+  15%{transform:translateX(-5px)rotate(-0.5deg);}
+  30%{transform:translateX(5px)rotate(0.5deg);}
+  45%{transform:translateX(-3px);}
+  60%{transform:translateX(3px);}
+  75%{transform:translateX(-2px);}
+}
+.combo-flash {
+  position: absolute; inset: 0; border-radius: 20px; pointer-events: none;
+  background: transparent; z-index: 30;
+}
+.combo-flash.pop { animation: comboFlash 0.4s ease; }
+@keyframes comboFlash { 0%{background:rgba(201,168,76,0);} 40%{background:rgba(201,168,76,0.1);} 100%{background:rgba(201,168,76,0);} }
+
+/* TILE */
+.tile {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; position: relative; border-radius: 12px;
+  margin: 2px; padding: 3px;
+  background: rgba(15,28,17,0.9);
+  border: 1.5px solid rgba(255,255,255,0.06);
+  transition: transform 0.12s ease;
+  overflow: visible;
+}
+.tile-img {
+  width: 100%; height: calc(100% - 14px);
+  object-fit: contain; border-radius: 8px; display: block;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  transition: transform 0.12s;
+}
+.tile-name {
+  display: block; font-size: clamp(5px,1.4vw,8px); font-weight: 500;
+  color: rgba(255,255,255,0.65); text-align: center; line-height: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  width: 100%; padding: 0 1px; margin-top: 1px;
+}
+.tile-shine {
+  position: absolute; inset: 0; border-radius: 12px;
+  background: linear-gradient(130deg, transparent 35%, rgba(255,255,255,0.08) 50%, transparent 65%);
+  pointer-events: none;
+  animation: tileShine 4s ease-in-out infinite;
+}
+@keyframes tileShine { 0%,70%,100%{transform:translateX(-100%);} 40%{transform:translateX(100%);} }
+
+.tile.selected {
+  background: rgba(20,45,22,0.95);
+  border-color: var(--sage); z-index: 5;
+  box-shadow: 0 0 0 2px rgba(122,155,118,0.4), 0 0 16px rgba(122,155,118,0.3);
+  animation: selPulse 0.7s ease-in-out infinite alternate;
+}
+@keyframes selPulse {
+  from { box-shadow: 0 0 0 2px rgba(122,155,118,0.3), 0 0 10px rgba(122,155,118,0.2); }
+  to   { box-shadow: 0 0 0 3px rgba(122,155,118,0.6), 0 0 22px rgba(122,155,118,0.4); }
+}
+.tile.selected .tile-img { transform: scale(1.08); filter: drop-shadow(0 0 6px rgba(122,155,118,0.6)) drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
+.tile:active:not(.selected) .tile-img { transform: scale(0.86); }
+
+.tile.matched { animation: tileVanish 0.42s cubic-bezier(0.36,0.07,0.19,0.97) forwards; }
+@keyframes tileVanish {
+  0%  { transform:scale(1);    opacity:1; filter:brightness(1); }
+  30% { transform:scale(1.28); opacity:1; filter:brightness(2.5)saturate(2); }
+  60% { transform:scale(0.8);  opacity:0.6; }
+  100%{ transform:scale(0);    opacity:0; }
+}
+.tile.falling { animation: tileDrop 0.38s cubic-bezier(0.34,1.5,0.64,1) forwards; }
+@keyframes tileDrop { from{transform:translateY(-80px)scale(0.6);opacity:0;} to{transform:none;opacity:1;} }
+
+/* Special tiles */
+.tile.sp-bomb      { border-color: rgba(200,80,255,0.8) !important; animation: spBomb 1s ease-in-out infinite alternate; }
+.tile.sp-lightning { border-color: rgba(80,180,255,0.9) !important; animation: spLight 0.5s ease-in-out infinite alternate; }
+.tile.sp-rainbow   { animation: spRainbow 2s linear infinite; }
+@keyframes spBomb  { from{box-shadow:0 0 8px rgba(200,80,255,0.4);} to{box-shadow:0 0 20px rgba(200,80,255,0.9);} }
+@keyframes spLight { from{box-shadow:0 0 10px rgba(80,180,255,0.5);} to{box-shadow:0 0 24px rgba(80,180,255,1);} }
+@keyframes spRainbow {
+  0%  {border-color:rgba(255,80,80,0.9);  box-shadow:0 0 14px rgba(255,80,80,0.5);}
+  25% {border-color:rgba(80,200,80,0.9);  box-shadow:0 0 14px rgba(80,200,80,0.5);}
+  50% {border-color:rgba(80,160,255,0.9); box-shadow:0 0 14px rgba(80,160,255,0.5);}
+  75% {border-color:rgba(200,80,255,0.9); box-shadow:0 0 14px rgba(200,80,255,0.5);}
+  100%{border-color:rgba(255,80,80,0.9);  box-shadow:0 0 14px rgba(255,80,80,0.5);}
+}
+.sp-badge {
+  position: absolute; top:-6px; right:-6px; font-size: 11px; z-index:10;
+  animation: badgeSpin 2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
+}
+@keyframes badgeSpin { from{transform:scale(1)rotate(-15deg);} to{transform:scale(1.2)rotate(15deg);} }
+.tile.hint-glow { animation: hintPulse 0.9s ease-in-out infinite alternate !important; }
+@keyframes hintPulse {
+  from{box-shadow:0 0 8px rgba(201,168,76,0.4);border-color:rgba(201,168,76,0.5);}
+  to  {box-shadow:0 0 22px rgba(201,168,76,0.9);border-color:rgba(201,168,76,1);}
+}
+
+/* COMBO DISPLAY */
+.combo-popup {
+  position: absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  pointer-events:none; z-index:50;
+  font-family: var(--font-display); font-size: 52px; font-weight: 700;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(201,168,76,0.8), 0 2px 4px rgba(0,0,0,0.5);
+  opacity:0;
+}
+.combo-popup.show { animation: comboAnim 1s ease forwards; }
+@keyframes comboAnim {
+  0%  {opacity:0;transform:translate(-50%,-50%)scale(0.4);}
+  20% {opacity:1;transform:translate(-50%,-50%)scale(1.15);}
+  70% {opacity:1;transform:translate(-50%,-60%)scale(1);}
+  100%{opacity:0;transform:translate(-50%,-80%)scale(0.8);}
+}
+
+/* Score popup */
+.score-pop {
+  position:absolute; pointer-events:none; z-index:40;
+  font-family: var(--font-display); font-size: 18px; font-weight: 700;
+  color: var(--gold-light); text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  animation: scorePopAnim 0.9s ease forwards;
+}
+@keyframes scorePopAnim {
+  0%  {transform:translateY(0)scale(0.5);opacity:0;}
+  25% {transform:translateY(-20px)scale(1.2);opacity:1;}
+  100%{transform:translateY(-70px)scale(0.8);opacity:0;}
+}
+
+/* BOOSTERS */
+.boosters-area { padding: 6px 14px max(14px,env(safe-area-inset-bottom,14px)); }
+.boosters-label { font-size: 8px; font-weight: 600; color: rgba(255,255,255,0.2); letter-spacing: 2px; text-align:center; margin-bottom:6px; }
+.boosters-row { display: flex; gap: 8px; justify-content: center; }
+.booster-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  border-radius: 14px; padding: 10px 12px; cursor: pointer;
+  position: relative; transition: transform 0.15s, background 0.2s;
+  min-width: 62px;
+}
+.booster-btn.active { background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.5); }
+.booster-btn:active { transform: scale(0.91); }
+.b-icon { font-size: 20px; }
+.b-name { font-size: 8px; font-weight: 500; color: rgba(255,255,255,0.55); }
+.b-count {
+  position: absolute; top:-5px; right:-5px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--forest); font-size: 8px; font-weight: 700;
+  border-radius: 8px; width: 16px; height: 16px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ============================================================
+   VICTORY / DEFEAT
+   ============================================================ */
+#victory, #defeat {
+  align-items: center; justify-content: center;
+}
+#victory {
+  background: radial-gradient(ellipse at 50% 30%, rgba(122,155,118,0.2), transparent 60%),
+              linear-gradient(175deg, #0F2012, #0A1A0C);
+}
+#defeat {
+  background: radial-gradient(ellipse at 50% 30%, rgba(100,40,40,0.15), transparent 60%),
+              linear-gradient(175deg, #1A0D0D, #0A0808);
+}
+.result-card {
+  position: relative; z-index: 5; width: calc(100% - 40px); max-width: 380px;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  padding: 32px 24px;
+  background: rgba(255,255,255,0.04); backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: var(--r-xl);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.result-alx {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards;
+}
+.result-alx-svg { width: 80px; height: auto; filter: drop-shadow(0 0 10px rgba(201,168,76,0.3)); }
+.result-alx-sub { font-size: 8px; font-weight: 300; color: rgba(201,168,76,0.5); letter-spacing: 3px; }
+.result-mascot { font-size: 64px; animation: mascotCelebrate 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.4s both; }
+.result-title {
+  font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--cream);
+  text-align: center; opacity: 0; animation: fadeUp 0.5s ease 0.5s forwards;
+}
+.result-stars { display: flex; gap: 10px; }
+.r-star { font-size: 36px; opacity: 0.2; filter: grayscale(1); transition: all 0.4s; }
+.r-star.lit { opacity:1; filter:none; animation: starLit 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.result-score-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r-md); padding: 14px 40px; text-align: center;
+  opacity: 0; animation: fadeUp 0.5s ease 0.7s forwards;
+}
+.rs-label { font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.3); letter-spacing: 2px; }
+.rs-value { font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--cream); }
+.result-reward {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
+  border: 1px solid rgba(201,168,76,0.3); border-radius: var(--r-md);
+  padding: 12px 18px; width: 100%;
+  opacity: 0; animation: fadeUp 0.5s ease 1s forwards;
+}
+.rr-icon { font-size: 22px; }
+.rr-text { font-size: 12px; font-weight: 600; color: var(--gold-light); }
+.result-coins { font-size: 20px; font-weight: 700; color: var(--gold); opacity:0; animation: fadeUp 0.4s ease 1.1s forwards; }
+.result-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+.btn-next {
+  width:100%; padding: 16px;
+  background: linear-gradient(135deg, var(--forest-mid), #3A6A40);
+  border: 1px solid rgba(122,155,118,0.4); border-radius: var(--r-md);
+  font-family: var(--font-display); font-size: 18px; font-weight: 700;
+  color: var(--cream); cursor: pointer; letter-spacing: 1px;
+  box-shadow: 0 6px 24px rgba(26,51,32,0.5);
+  transition: transform 0.15s;
+}
+.btn-next:active { transform: scale(0.97); }
+.btn-secondary-sm {
+  width:100%; padding: 12px;
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  border-radius: var(--r-md); font-family: var(--font-body);
+  font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.6);
+  cursor: pointer; transition: background 0.2s;
+}
+.btn-retry-gold {
+  width:100%; padding: 14px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none; border-radius: var(--r-md);
+  font-family: var(--font-display); font-size: 16px; font-weight: 700;
+  color: var(--forest); cursor: pointer;
+}
+
+/* ============================================================
+   SHOP SCREEN
+   ============================================================ */
+#shop {
+  background: linear-gradient(175deg, #0D1A0F 0%, #0A1A0C 100%);
+}
+.shop-header {
+  padding: max(48px,env(safe-area-inset-top,48px)) 20px 16px;
+  display: flex; align-items: center; gap: 12px; position: relative; z-index: 5;
+}
+.shop-title { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--cream); flex:1; }
+.shop-scroll { flex:1; overflow-y:auto; padding: 0 16px 24px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.shop-scroll::-webkit-scrollbar { display:none; }
+.shop-section { font-size:10px; font-weight:600; color:var(--sage); letter-spacing:2px; text-transform:uppercase; margin:16px 0 10px; display:flex; align-items:center; gap:8px; }
+.shop-section::after { content:''; flex:1; height:1px; background:rgba(122,155,118,0.2); }
+.shop-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.shop-card {
+  background: var(--glass-white); border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px); border-radius: var(--r-md);
+  padding: 16px 12px; display:flex; flex-direction:column; align-items:center; gap:6px;
+  cursor:pointer; transition:transform 0.15s;
+  position: relative; overflow: hidden;
+}
+.shop-card::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at top, rgba(122,155,118,0.06), transparent); }
+.shop-card:active { transform:scale(0.94); }
+.shop-card-icon { font-size:28px; }
+.shop-card-name { font-size:11px; font-weight:600; color:var(--cream); text-align:center; }
+.shop-card-desc { font-size:9px; font-weight:300; color:rgba(255,255,255,0.4); text-align:center; }
+.shop-card-price { background:linear-gradient(135deg, var(--gold), var(--gold-light)); color:var(--forest); font-size:10px; font-weight:700; border-radius:20px; padding:4px 12px; margin-top:2px; }
+
+/* ============================================================
+   PAUSE OVERLAY
+   ============================================================ */
+.overlay {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,0.75); backdrop-filter:blur(12px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 0.3s;
+}
+.overlay.show { opacity:1; pointer-events:all; }
+.pause-card {
+  width:calc(100% - 48px); max-width:340px;
+  background:linear-gradient(160deg, rgba(26,51,32,0.95), rgba(13,26,15,0.98));
+  border:1px solid rgba(122,155,118,0.25); border-radius:var(--r-xl);
+  padding:32px 24px; display:flex; flex-direction:column; align-items:center; gap:12px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  animation:pauseIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes pauseIn { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
+.pause-alx-svg { width:60px; height:auto; }
+.pause-title { font-family:var(--font-display); font-size:28px; font-weight:700; color:var(--cream); letter-spacing:2px; }
+.pause-btn {
+  width:100%; padding:14px; border:none; border-radius:var(--r-md);
+  font-family:var(--font-display); font-size:16px; font-weight:700; cursor:pointer; letter-spacing:1px;
+  background:linear-gradient(135deg, var(--forest-mid), #3A6A40);
+  color:var(--cream); border:1px solid rgba(122,155,118,0.4); transition:transform 0.15s;
+}
+.pause-btn:active { transform:scale(0.97); }
+.pause-btn.ghost {
+  background:var(--glass-white); border:1px solid var(--glass-border);
+  font-family:var(--font-body); font-size:13px; font-weight:400; color:rgba(255,255,255,0.6);
+}
+
+/* ============================================================
+   TOAST & COINS
+   ============================================================ */
+.toast {
+  position:fixed; bottom:100px; left:50%; transform:translateX(-50%);
+  background:rgba(20,40,22,0.95); border:1px solid rgba(122,155,118,0.3);
+  backdrop-filter:blur(12px); border-radius:30px; padding:10px 24px;
+  font-size:12px; font-weight:600; color:var(--cream);
+  z-index:300; white-space:nowrap;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.3s, transform 0.3s;
+  transform:translateX(-50%) translateY(10px);
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.coins-layer { position:fixed; inset:0; pointer-events:none; z-index:200; }
+.fly-coin { position:absolute; font-size:18px; pointer-events:none; animation:coinFly 1s ease forwards; }
+@keyframes coinFly { 0%{transform:scale(1)translateY(0);opacity:1;} 100%{transform:scale(0.4)translateY(-100px);opacity:0;} }
+
+/* ============================================================
+   SCROLLBAR & MISC
+   ============================================================ */
+::-webkit-scrollbar { width:2px; }
+::-webkit-scrollbar-thumb { background:rgba(122,155,118,0.3); border-radius:1px; }
+* { -webkit-touch-callout:none; }
+</style>
+</head>
+<body>
+
+<!-- Ambient background (all screens share) -->
+<div class="ambient" id="ambient">
+  <div class="amb-orb o1"></div>
+  <div class="amb-orb o2"></div>
+  <div class="amb-orb o3"></div>
+  <div class="leaf-bg" id="leaf-bg"></div>
+</div>
+<div class="noise"></div>
+<canvas id="bg-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;"></canvas>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+<div id="coins-layer" class="coins-layer"></div>
+
+<!-- ============================================================
+     INTRO SCREEN
+     ============================================================ -->
+<div id="intro" class="screen active">
+  <canvas id="intro-canvas" class="intro-canvas"></canvas>
+  <div class="intro-sweep"></div>
+  <div class="intro-content">
+    <div class="intro-eyebrow">Club Wellness Premium · Bolivia</div>
+    <div class="alx-logo-mark">
+      <svg class="alx-svg-main" viewBox="0 0 280 110" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="alxG" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#F7F3EC"/>
+            <stop offset="40%"  stop-color="#EDE6D8"/>
+            <stop offset="100%" stop-color="#C9A84C"/>
+          </linearGradient>
+          <linearGradient id="barG" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="transparent"/>
+            <stop offset="30%"  stop-color="#A8906A"/>
+            <stop offset="50%"  stop-color="#E8C97A"/>
+            <stop offset="70%"  stop-color="#A8906A"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+          <filter id="alxGlo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="alxSh">
+            <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.7)"/>
+          </filter>
+        </defs>
+        <path class="alx-path alx-path-A" d="M10,98 L55,16 L100,98"
+              stroke="url(#alxG)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"
+              filter="url(#alxSh)"/>
+        <line class="alx-path alx-path-Ab" x1="27" y1="70" x2="83" y2="70"
+              stroke="url(#barG)" stroke-width="4" stroke-linecap="round"/>
+        <path class="alx-path alx-path-L" d="M118,16 L118,98 L170,98"
+              stroke="url(#alxG)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"
+              filter="url(#alxSh)"/>
+        <path class="alx-path alx-path-X" d="M190,16 L272,98 M272,16 L190,98"
+              stroke="url(#alxG)" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"
+              filter="url(#alxSh)"/>
+      </svg>
+    </div>
+    <div class="intro-divider">
+      <div class="intro-divider-line"></div>
+      <div class="intro-divider-gem">◆</div>
+      <div class="intro-divider-line"></div>
+    </div>
+    <div class="intro-brand">ALX Wellness</div>
+    <div class="intro-tag">Nutrición · Energía · Bienestar</div>
+  </div>
+  <div class="intro-skip" onclick="skipIntro()">Toca para continuar</div>
+</div>
+
+<!-- ============================================================
+     MAIN MENU
+     ============================================================ -->
+<div id="menu" class="screen">
+  <div class="menu-scroll">
+    <!-- Top bar -->
+    <div class="menu-topbar">
+      <div class="player-row">
+        <div class="player-avatar">🧘</div>
+        <div class="player-meta">
+          <div class="player-name-text" id="pname">Wellness Star</div>
+          <div class="player-rank" id="prank">⭐ Nivel 1 · Miembro</div>
+        </div>
+      </div>
+      <div class="topbar-chips">
+        <div class="chip gold"><span class="chip-icon">🪙</span><span id="coins-ui">0</span></div>
+        <div class="chip"><span class="chip-icon">⚡</span><span id="energy-ui">5</span></div>
+      </div>
+    </div>
+
+    <!-- Brand section -->
+    <div class="menu-brand-section">
+      <div class="menu-alx-logo">
+        <svg class="menu-alx-svg" viewBox="0 0 180 70" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="mG" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#F7F3EC"/>
+              <stop offset="100%" stop-color="#C9A84C"/>
+            </linearGradient>
+            <linearGradient id="mB" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="transparent"/>
+              <stop offset="50%"  stop-color="#E8C97A"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </linearGradient>
+          </defs>
+          <path d="M6,62 L35,8 L64,62" stroke="url(#mG)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="17" y1="44" x2="53" y2="44" stroke="url(#mB)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M76,8 L76,62 L108,62" stroke="url(#mG)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M120,8 L174,62 M174,8 L120,62" stroke="url(#mG)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="menu-alx-sub">Wellness</div>
+      </div>
+      <div class="menu-wellness-title">Tu Bienestar<br>es el Juego</div>
+      <div class="menu-wellness-tag">Nutrición · Energía · Bienestar</div>
+    </div>
+
+    <!-- Mascotas -->
+    <div class="mascot-area">
+      <div class="mascot-card calm">
+        <div class="mascot float" style="font-size:52px;">🐶</div>
+        <div class="mascot-name">Dulce</div>
+        <div class="mascot-tip">"Respira... el bienestar es tu superpoder 🌿"</div>
+        <div class="mascot-aura gold"></div>
+      </div>
+      <div class="mascot-card energy">
+        <div class="mascot bounce" style="font-size:48px;">🐕</div>
+        <div class="mascot-name">Cukis</div>
+        <div class="mascot-tip">"¡Vamos! Tu energía es ilimitada hoy 🌟"</div>
+        <div class="mascot-aura"></div>
+      </div>
+    </div>
+
+    <!-- Daily reward -->
+    <div class="daily-banner" id="daily-banner">
+      <div class="daily-icon">🎁</div>
+      <div class="daily-text">
+        <div class="daily-text-title">Recompensa Diaria</div>
+        <div class="daily-text-sub">¡Tu streak: <span id="streak-count">1</span> días! 🔥</div>
+      </div>
+      <button class="daily-btn" onclick="claimDaily()">RECLAMAR</button>
+    </div>
+
+    <!-- PLAY BUTTON -->
+    <div class="play-section">
+      <button class="btn-play-main" onclick="showLevelMap()">
+        <div class="play-particles" id="play-particles"></div>
+        <div class="play-orb">🌿</div>
+        <div class="play-text-wrap">
+          <span class="play-main-label">JUGAR</span>
+          <span class="play-sub-label">Valle del Bienestar</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="quick-grid">
+      <div class="quick-btn" onclick="showScreen('shop')">
+        <div class="quick-badge">NEW</div>
+        <div class="quick-icon">🛍️</div>
+        <div class="quick-label">Tienda</div>
+      </div>
+      <div class="quick-btn" onclick="showRanking()">
+        <div class="quick-icon">🏆</div>
+        <div class="quick-label">Ranking</div>
+      </div>
+      <div class="quick-btn" onclick="showAchievements()">
+        <div class="quick-icon">⭐</div>
+        <div class="quick-label">Logros</div>
+      </div>
+      <div class="quick-btn" onclick="showProfile()">
+        <div class="quick-icon">👤</div>
+        <div class="quick-label">Perfil</div>
+      </div>
+      <div class="quick-btn" onclick="showCommunity()">
+        <div class="quick-icon">👥</div>
+        <div class="quick-label">Comunidad</div>
+      </div>
+      <div class="quick-btn" onclick="showHabits()">
+        <div class="quick-icon">💚</div>
+        <div class="quick-label">Hábitos</div>
+      </div>
+    </div>
+
+    <!-- Habits -->
+    <div class="habits-section">
+      <div class="section-label">Hábitos de Hoy</div>
+      <div class="habits-row" id="habits-row"></div>
+    </div>
+
+    <!-- Settings strip -->
+    <div class="settings-strip">
+      <div class="icon-pill" onclick="toggleMusic()" id="music-pill">🎵</div>
+      <div class="icon-pill" onclick="toggleSound()" id="sound-pill">🔊</div>
+      <div class="icon-pill" onclick="editName()">✏️</div>
+      <div class="icon-pill" onclick="showAbout()">ℹ️</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     LEVEL MAP
+     ============================================================ -->
+<div id="levelmap" class="screen">
+  <div class="map-header">
+    <div class="back-pill" onclick="showScreen('menu')">‹</div>
+    <div class="map-title-wrap">
+      <div class="map-title">Mapa de Niveles</div>
+      <div class="map-sub">ALX Wellness · Bolivia</div>
+    </div>
+    <div class="map-coins">🪙 <span id="coins-map">0</span></div>
+  </div>
+  <div class="world-tabs" id="world-tabs"></div>
+  <div class="level-path" id="level-path"></div>
+</div>
+
+<!-- ============================================================
+     GAMEPLAY
+     ============================================================ -->
+<div id="gameplay" class="screen">
+  <div class="game-header">
+    <div class="back-pill" onclick="pauseGame()">‹</div>
+    <div class="game-level-info">
+      <div class="game-level-badge">NIVEL <span id="g-level">1</span></div>
+      <div class="game-score" id="g-score">0</div>
+    </div>
+    <div class="alx-hud">
+      <svg class="alx-hud-svg" viewBox="0 0 56 22" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1,19 L9,3 L17,19" stroke="rgba(200,184,154,0.5)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="4" y1="13" x2="14" y2="13" stroke="rgba(201,168,76,0.6)" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M21,3 L21,19 L31,19" stroke="rgba(200,184,154,0.5)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M36,3 L55,19 M55,3 L36,19" stroke="rgba(200,184,154,0.5)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="game-moves-wrap">
+        <div class="moves-label">MOVIMIENTOS</div>
+        <div class="moves-val" id="g-moves">25</div>
+      </div>
+    </div>
+  </div>
+  <div class="obj-strip">
+    <div class="obj-label">META</div>
+    <div class="obj-items" id="g-obj"></div>
+  </div>
+  <div class="stars-strip">
+    <div class="s-star" id="s1">⭐</div>
+    <div class="s-track"><div class="s-fill" id="sf1"></div></div>
+    <div class="s-star" id="s2">⭐</div>
+    <div class="s-track"><div class="s-fill" id="sf2"></div></div>
+    <div class="s-star" id="s3">⭐</div>
+  </div>
+  <div class="board-wrap">
+    <div class="board-inner" id="board-inner">
+      <div class="game-board" id="board"></div>
+      <div class="combo-popup" id="combo-popup"></div>
+      <div class="combo-flash" id="combo-flash"></div>
+    </div>
+  </div>
+  <div class="boosters-area">
+    <div class="boosters-label">POTENCIADORES</div>
+    <div class="boosters-row" id="boosters-row"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     VICTORY
+     ============================================================ -->
+<div id="victory" class="screen">
+  <div class="result-card">
+    <div class="result-alx">
+      <svg class="result-alx-svg" viewBox="0 0 160 64" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="rG" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#F7F3EC"/>
+            <stop offset="100%" stop-color="#E8C97A"/>
+          </linearGradient>
+          <linearGradient id="rB" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stop-color="transparent"/>
+            <stop offset="50%"  stop-color="#E8C97A"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+          <filter id="rGlo"><feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <path d="M4,56 L28,8 L52,56" stroke="url(#rG)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#rGlo)"/>
+        <line x1="14" y1="39" x2="42" y2="39" stroke="url(#rB)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M62,8 L62,56 L88,56" stroke="url(#rG)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#rGlo)"/>
+        <path d="M100,8 L156,56 M156,8 L100,56" stroke="url(#rG)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#rGlo)"/>
+      </svg>
+      <div class="result-alx-sub">WELLNESS</div>
+    </div>
+    <div class="result-mascot">🐶</div>
+    <div class="result-title">¡NIVEL COMPLETO!</div>
+    <div class="result-stars">
+      <div class="r-star" id="rs1">⭐</div>
+      <div class="r-star" id="rs2">⭐</div>
+      <div class="r-star" id="rs3">⭐</div>
+    </div>
+    <div class="result-score-card">
+      <div class="rs-label">PUNTUACIÓN</div>
+      <div class="rs-value" id="v-score">0</div>
+    </div>
+    <div class="result-reward">
+      <div class="rr-icon">🎁</div>
+      <div class="rr-text" id="v-reward">+50 🪙 Té Herbal Gratis</div>
+    </div>
+    <div class="result-coins" id="v-coins">+0 🪙</div>
+    <div class="result-btns">
+      <button class="btn-next" onclick="nextLevel()">SIGUIENTE NIVEL ›</button>
+      <button class="btn-secondary-sm" onclick="showScreen('menu')">🏠 Menú Principal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     DEFEAT
+     ============================================================ -->
+<div id="defeat" class="screen">
+  <div class="result-card">
+    <div class="result-alx">
+      <svg class="result-alx-svg" viewBox="0 0 160 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4,56 L28,8 L52,56" stroke="rgba(200,184,154,0.4)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="14" y1="39" x2="42" y2="39" stroke="rgba(201,168,76,0.4)" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M62,8 L62,56 L88,56" stroke="rgba(200,184,154,0.4)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M100,8 L156,56 M156,8 L100,56" stroke="rgba(200,184,154,0.4)" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="result-alx-sub">WELLNESS</div>
+    </div>
+    <div class="result-mascot" style="animation:none">🐕</div>
+    <div class="result-title" style="font-size:26px">¡Casi lo logras!</div>
+    <div class="result-score-card">
+      <div class="rs-label">TU SCORE</div>
+      <div class="rs-value" id="d-score">0</div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-next" onclick="retryLevel()">🔄 REINTENTAR</button>
+      <button class="btn-retry-gold" onclick="continueCoins()">💛 CONTINUAR (30 🪙)</button>
+      <button class="btn-secondary-sm" onclick="showScreen('menu')">🏠 Menú</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SHOP
+     ============================================================ -->
+<div id="shop" class="screen">
+  <div class="shop-header">
+    <div class="back-pill" onclick="showScreen('menu')">‹</div>
+    <div class="shop-title">Tienda Wellness</div>
+    <div class="map-coins">🪙 <span id="coins-shop">0</span></div>
+  </div>
+  <div class="shop-scroll" id="shop-scroll"></div>
+</div>
+
+<!-- PAUSE -->
+<div id="pause-overlay" class="overlay">
+  <div class="pause-card">
+    <svg class="pause-alx-svg" viewBox="0 0 90 36" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="pG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F7F3EC"/><stop offset="100%" stop-color="#C9A84C"/></linearGradient></defs>
+      <path d="M2,32 L16,4 L30,32" stroke="url(#pG)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="7" y1="23" x2="25" y2="23" stroke="#E8C97A" stroke-width="2" stroke-linecap="round"/>
+      <path d="M36,4 L36,32 L53,32" stroke="url(#pG)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M59,4 L88,32 M88,4 L59,32" stroke="url(#pG)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="pause-title">EN PAUSA</div>
+    <div style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:-4px">ALX WELLNESS</div>
+    <button class="pause-btn" onclick="resumeGame()">▶ CONTINUAR</button>
+    <button class="pause-btn ghost" onclick="retryLevel()">🔄 Reintentar</button>
+    <button class="pause-btn ghost" onclick="showScreen('menu')">🏠 Menú Principal</button>
+    <div style="display:flex;gap:12px;margin-top:4px">
+      <div class="icon-pill" onclick="toggleMusic()" id="pause-music">🎵</div>
+      <div class="icon-pill" onclick="toggleSound()" id="pause-sound">🔊</div>
+    </div>
+  </div>
+</div>
+
+<script src="products.js" onerror="window.PRODUCT_IMAGES={}"></script>
+<script src="alx-game.js"></script>
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  }
+</script>
+</body>
+</html>

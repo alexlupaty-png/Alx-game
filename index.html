@@ -582,16 +582,18 @@ html, body {
 /* BOARD */
 .board-wrap {
   flex:1; display: flex; align-items: center; justify-content: center;
-  padding: 4px 10px; position: relative;
+  padding: 2px 4px; position: relative;
 }
 .board-inner { position: relative; }
 .game-board {
   display: grid;
-  background: rgba(0,0,0,0.25);
-  border-radius: 20px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 0 0 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+  box-shadow: 0 0 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
   overflow: hidden; position: relative;
+  width: min(98vw, calc(100vh - 280px));
+  height: min(98vw, calc(100vh - 280px));
 }
 .board-shake { animation: shake 0.45s ease; }
 @keyframes shake {
@@ -613,12 +615,11 @@ html, body {
 .tile {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   cursor: pointer; position: relative; border-radius: 14px;
-  margin: 2px; padding: 0;
+  margin: 1.5px; padding: 0;
   background: transparent;
   border: none;
   transition: transform 0.12s ease;
   overflow: visible;
-  /* Force GPU layer for smooth rendering */
   will-change: transform;
   -webkit-backface-visibility: hidden;
 }
